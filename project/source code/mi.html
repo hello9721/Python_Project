@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form>
+        <select name="시도" >
+          <option value="man">=== 선택 ===</option>
+
+          {% for i in Rc1 %}
+          <option value={{i}}> {{ i }} </option>
+          {%endfor%}
+        </select>
+
+        <select name="구" >
+          <option value="man">=== 선택 ===</option>
+          
+          {% for i in Rc2 %}
+          <option value={{i}}> {{ i }} </option>
+          {%endfor%}
+          </select>
+
+
+        <select name="동" >
+          <option value="man">=== 선택 ===</option>
+          {% for i in Rc3 %}
+          <option value={{i}}> {{ i }} </option>
+          {%endfor%}
+        </select>  
+      </form>
+
+</body>
+</html>

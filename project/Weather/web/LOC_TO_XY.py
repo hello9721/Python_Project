@@ -26,7 +26,7 @@ def ip_to_loc():                                    # Google Geolocation API 를
 
 def loc_to_xy(lat, lng):                            # 들어온 위도, 경도를 통해 지역정보DB에서 주소, x, y를 가져오는 함수
 
-    con = sql.connect("..\Location.db")
+    con = sql.connect("Location.db")
     cmd = con.cursor()
 
     query = f"SELECT ONE, TWO, THR, X, Y FROM location WHERE LAT = '{lat}' AND LNG = '{lng}'"
@@ -43,10 +43,10 @@ def loc_to_xy(lat, lng):                            # 들어온 위도, 경도�
 
 def ad_to_xy(three):
 
-    con = sql.connect("..\Location.db")
+    con = sql.connect("Location.db")
     cmd = con.cursor()
 
-    query = f"SELECT X, Y LOCATION WHERE THR = '{three}'"
+    query = f"SELECT X, Y FROM LOCATION WHERE THR = '{three}'"
     cmd.execute(query)
     
     data = cmd.fetchall()

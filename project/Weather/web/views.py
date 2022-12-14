@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from .models import *
-from API_TO_DB import *
-from LOC_TO_XY import *
+from .API_TO_DB import *
+from .LOC_TO_XY import *
 
 def test(request):
 
@@ -18,15 +18,11 @@ def test(request):
 
 def home(request):
 
-    val = ['=== 시 ===', '=== 구 ===', '=== 동 ===']
-
     c1 = Location.objects.values('one')
 
     Rc1 = []
     Rc2 = []
     Rc3 = []
-
-    get_thr = ''
 
     cst = ['vFcst', 'sFcst', 'sNcst']
 
@@ -34,19 +30,43 @@ def home(request):
 
         if i not in Rc1: Rc1.append(i)
 
-    if request.GET != {}:
+    if request.GET == {}:
 
-        if request.GET.get('one') != '=== 시 ===':
+        address = ''
+
+        for i in cst:
+        
+            temp, address = get_data(i, '')
+            data_to_DB(temp, i)
+
+        val = [address[0], address[1], address[2]]
+
+    elif request.GET != {}:
+        
+        val = [request.GET.get('prev_one'), request.GET.get('prev_two'), request.GET.get('prev_thr')]
+
+        if request.GET.get('one') != val[0]:
 
             get_one = request.GET.get('one')
             val[0] = get_one
 
             c2 = Location.objects.filter(one__contains=get_one).values('two')
+            isRight = Location.objects.filter(one__contains=get_one).values(f'two = "{val[1]}"')
 
-            for i in c2:
-                if i not in Rc2: Rc2.append(i)
+            print(isRight)
 
-        if request.GET.get('two') != '=== 구 ===':
+            if c2 == {}:
+                
+                val[1] = '=== 구 ==='
+                val[2] = '=== 동 ==='
+
+            else:
+
+                for i in c2:
+                    if i not in Rc2: Rc2.append(i)
+
+
+        if request.GET.get('two') != val[1]:
 
             get_two = request.GET.get('two')
             val[1] = get_two
@@ -56,14 +76,16 @@ def home(request):
             for i in c3:
                 if i not in Rc3: Rc3.append(i)
 
-        if request.GET.get('thr') != '=== 동 ===':
+        if request.GET.get('thr') != val[2]:
 
             get_thr = request.GET.get('thr')
             val[2] = get_thr
 
-    for i in cst:
-    
-        temp = get_data(i, get_thr)
-        data_to_DB(temp, i)
+            for i in cst:
+        
+                temp, useless = get_data(i, get_thr)
+                data_to_DB(temp, i)
+
+
 
     return render(request, "home/index.html", {"Rc1": Rc1, "Rc2": Rc2, "Rc3": Rc3, 'val' : val})

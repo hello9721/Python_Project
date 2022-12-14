@@ -4,7 +4,7 @@ import requests as req
 import sqlite3 as sql
 # lxml 라이브러리 인스톨 하기
 
-from LOC_TO_XY import *
+from .LOC_TO_XY import *
 
 def get_now():                      # 현재 시간을 필요한 포맷으로 반환
                                     # 데이터를 가져오는 시간에 따라 가장 최근 예보 데이터를 가져올 수 있도록 한다.
@@ -70,8 +70,6 @@ def get_data(cst, ad_thr):                         # api에서 데이터 가져�
     result = req.get(url, verify = False)
     soup = b(result.text, 'lxml')
 
-    print(address)                                  # 추후 주소 사용할때 수정할 부분
-
     items = soup.find_all('item')
 
     lst = []
@@ -99,12 +97,12 @@ def get_data(cst, ad_thr):                         # api에서 데이터 가져�
 
         lst.append(temp)
 
-    return lst                                      # 전체 리스트 반환
+    return lst, address                             # 전체 리스트 반환
 
 
 def data_to_DB(lst, cst):                           # 리스트 형식으로 들어온 데이터를 DB에 저장
 
-    con = sql.connect("..\Weather_Data.db")         # DB 연결
+    con = sql.connect("Weather_Data.db")         # DB 연결
     cmd = con.cursor()
 
     if cst == "vFcst": cst = "VilageFcst"           # cst별 테이블 다르게

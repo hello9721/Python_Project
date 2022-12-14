@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from .models import *
+from API_TO_DB import *
+from LOC_TO_XY import *
 
 def test(request):
 
@@ -23,6 +25,10 @@ def home(request):
     Rc1 = []
     Rc2 = []
     Rc3 = []
+
+    get_thr = ''
+
+    cst = ['vFcst', 'sFcst', 'sNcst']
 
     for i in c1:
 
@@ -54,5 +60,10 @@ def home(request):
 
             get_thr = request.GET.get('thr')
             val[2] = get_thr
+
+    for i in cst:
+    
+        temp = get_data(i, get_thr)
+        data_to_DB(temp, i)
 
     return render(request, "home/index.html", {"Rc1": Rc1, "Rc2": Rc2, "Rc3": Rc3, 'val' : val})

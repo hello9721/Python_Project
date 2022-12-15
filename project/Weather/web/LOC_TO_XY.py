@@ -1,10 +1,38 @@
 import json
 import random as rd
-import requests
+import requests as req
 import sqlite3 as sql
 
-def ip_to_loc():                                    # Google Geolocation API 를 이용하여 접속 IP의 위도, 경도를 반환하는 함수
 
+def get_ip(request):                                # 현재 GET 요청을 한 IP 주소 추출
+
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+
+    context = {'ip' : ip}
+
+    return context
+
+# def ip_to_loc(ip):                                  # https://ip-api.com/docs/api:json 를 이용하여 입력 IP의 위도, 경도를 반환하는 함수 (배포용)
+    
+#     url = f'http://ip-api.com/json/{ip}?fields=lat,lon'
+
+#     result = req.get(url, verify = False)
+
+#     loc = json.loads(result.text)                   # 받아온 결과를 json 형태 (dict 형태) 로 변환
+
+#     lat = f"{loc['lat']:.2f}"                       # 위도
+#     lng = f"{loc['lon']:.2f}"                       # 경도
+
+#     return lat, lng                                 # 반환
+
+def ip_to_loc(ip):                                  # Google Geolocation API 를 이용하여 접속 IP의 위도, 경도를 반환하는 함수 (로컬용)
+                                                    # 현재 서버 컴퓨터의 IP를 통해 위도, 경도가 나오기 때문에 로컬에서만 실행
+                                                    
     api_key = "AIzaSyCxUJvUYcT-DO2xIbsatBmp6gEW2WAE9eY"
 
     LOCATION_API_KEY = api_key
@@ -14,7 +42,7 @@ def ip_to_loc():                                    # Google Geolocation API 를
         'considerIp': True,
     }
 
-    result = requests.post(url, data)
+    result = req.post(url, data)
 
     loc = json.loads(result.text)                   # 받아온 결과를 json 형태 (dict 형태) 로 변환
     loc = loc["location"]
@@ -41,7 +69,7 @@ def loc_to_xy(lat, lng):                            # 들어온 위도, 경도�
 
     return location, x, y
 
-def ad_to_xy(three):
+def ad_to_xy(three):                                # three 로 마지막 요소의 주소값이 들어오면 그 값으로 x, y 값을 찾아 반환
 
     con = sql.connect("Location.db")
     cmd = con.cursor()
@@ -50,7 +78,7 @@ def ad_to_xy(three):
     cmd.execute(query)
     
     data = cmd.fetchall()
-    data = data[0]
+    data = data[0]                                  # data = [( x, y )] -> data = (x, y)
 
     x, y = data[0], data[1]
 

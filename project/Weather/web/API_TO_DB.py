@@ -54,12 +54,12 @@ def get_data(cst, ad_thr):                         # api에서 데이터 가져�
     address = ""
     x, y = 0, 0
 
-    if ad_thr == '':
+    if type(ad_thr) == dict:                        # ip 주소로 조회 시 ad_thr 가 {'ip' : ip} 형식으로 들어옴
 
-        lat, lng = ip_to_loc()                      # ip 주소에 따른 위도, 경도 값 받아오기
+        lat, lng = ip_to_loc(ad_thr['ip'])          # ip 주소에 따른 위도, 경도 값 받아오기
         address, x, y = loc_to_xy(lat, lng)         # 주소, x, y 값 받아오기
                                                     # 요청된 cst에 따라 api에서 가져오는 데이터가 다르도록 지정.        
-    elif ad_thr != '':
+    elif type(ad_thr) == str:                       # 지역 주소로 조회 시 ad_thr 가 문자열로 들어옴
 
         x, y = ad_to_xy(ad_thr)
 
@@ -102,7 +102,7 @@ def get_data(cst, ad_thr):                         # api에서 데이터 가져�
 
 def data_to_DB(lst, cst):                           # 리스트 형식으로 들어온 데이터를 DB에 저장
 
-    con = sql.connect("Weather_Data.db")         # DB 연결
+    con = sql.connect("Weather_Data.db")            # DB 연결
     cmd = con.cursor()
 
     if cst == "vFcst": cst = "VilageFcst"           # cst별 테이블 다르게
@@ -134,14 +134,3 @@ def data_to_DB(lst, cst):                           # 리스트 형식으로 들
         cmd.execute(query)
         cmd.fetchall()
         con.commit()
-
-# 테스트 실행 코드
-# vFcst = 단기예보 / sFcst = 초단기예보 / sNcst = 초단기실황
-
-# vf_lst = get_data('vFcst')
-# sf_lst = get_data('sFcst')
-# sn_lst = get_data('sNcst')
-
-# data_to_DB(vf_lst, 'vFcst')
-# data_to_DB(sf_lst, 'sFcst')
-# data_to_DB(sn_lst, 'sNcst')

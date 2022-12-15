@@ -1,4 +1,5 @@
 from datetime import datetime as dt
+from datetime import timezone, timedelta
 from bs4 import BeautifulSoup as b
 import requests as req
 import sqlite3 as sql
@@ -8,7 +9,7 @@ from .LOC_TO_XY import *
 
 def get_now():                      # 현재 시간을 필요한 포맷으로 반환
                                     # 데이터를 가져오는 시간에 따라 가장 최근 예보 데이터를 가져올 수 있도록 한다.
-    now = dt.now()
+    now = dt.now(timezone(timedelta(hours=9)))
     date = now.date()
     time = now.time()
 

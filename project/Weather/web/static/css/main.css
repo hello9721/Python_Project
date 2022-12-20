@@ -1,0 +1,321 @@
+header{
+
+    position: absolute;
+
+    left: 10vw;
+
+    height: 60px;
+    width: 80%;
+
+}
+
+header .title{
+
+    position: absolute;
+
+    font-size: 30px;
+    font-weight: 800;
+
+    color: grey;
+
+    left: 20px;
+    bottom: 20px;
+
+}
+
+header #selector{
+
+    position: absolute;
+
+    right: 10px;
+    bottom: 20px;
+
+}
+
+header #selector select{
+
+    width: 120px;
+    height: 30px;
+
+    text-align: center;
+
+}
+
+header .bottom_line{
+
+    position: absolute;
+    
+    height: 5px;
+    width: 80vw;
+
+    background-color: rgba(128, 128, 128, 0.438);
+
+    bottom: 0;
+    left: 0;
+
+}
+
+.main_weather{
+
+    position: absolute;
+
+    top: 75px;
+    left: 10vw;
+
+    height: 250px;
+    width: 80%;
+
+    background-color: rgba(28, 67, 119, 0.37);
+
+    border-radius: 10px;
+
+}
+
+.main_weather div{
+
+    margin: auto;
+    display: block;
+
+    width: 100px;
+
+    font-size: 20px;
+    color: rgb(255, 255, 255);
+
+}
+
+.main_weather .main_tmp{
+
+    position: absolute;
+
+    font-size: 50px;
+    font-weight: 800;
+
+    top: 60px;
+    left: calc(50% - 40px);
+
+}
+
+.main_weather .main_tmn{
+
+    position: absolute;
+    
+    width: 60px;
+    height: 15px;
+    display: block;
+
+    color: rgb(22, 94, 158);
+    font-weight: 500;
+    font-size: 12px;
+
+    text-align: left;
+
+    top: 75px;
+    left: calc(50% + 105px);
+
+}
+
+.main_weather .main_tmx{
+
+    position: absolute;
+
+    width: 60px;
+    height: 15px;
+    display: block;
+
+    color: rgb(158, 22, 22);
+    font-weight: 500;
+    font-size: 12px;
+
+    text-align: left;
+
+    top: 95px;
+    left: calc(50% + 105px);
+
+}
+
+.main_weather .main_sky{
+
+    position: absolute;
+
+    top: 65px;
+    left: calc(50% - 145px);
+
+}
+
+.main_weather .main_reh{
+
+    position: absolute;
+
+    width: 85px;
+    height: 20px;
+    display: block;
+
+    color: rgba(255, 255, 255, 0.616);
+    font-weight: 700;
+    font-size: 15px;
+    text-align: right;
+
+    top: 130px;
+    left: calc(50% + 60px);
+
+}
+
+.main_weather .main_wnd{
+
+    position: absolute;
+
+    width: 100px;
+    height: 20px;
+    display: block;
+
+    color: rgba(255, 255, 255, 0.616);
+    font-weight: 700;
+    font-size: 15px;
+    text-align: center;
+
+    top: 130px;
+    left: calc(50% - 40px);
+
+}
+
+.day_weather{
+
+    position: absolute;
+
+    top: 340px;
+    left: 10vw;
+
+    width: 80vw;
+    height: 300px;
+
+    border-radius: 10px;
+
+    background-color: rgba(28, 67, 119, 0.37);
+
+}
+
+.day_weather .day_tbl{
+
+    width: 80vw;
+    height: 300px;
+
+    border-collapse: collapse;
+
+}
+
+.day_weather .day_tbl tr td{
+
+    text-align: center;
+    font-weight: 700;
+    font-size: 13px;
+    color: white;
+
+}
+
+.day_weather .day_tbl .day_time td{
+
+    font-size: 20px;
+
+}
+
+.day_weather .day_tbl .day_sky td{
+
+    font-size: 20px;
+    height: 100px;
+    width: 100px;
+/* 
+    background-image: url("./cloud.png");
+    background-repeat: no-repeat;
+    background-position: center; */
+
+}
+
+.day_weather .day_subtitle{width: 80px;}
+.day_padding{width: 20px;}
+
+.day_margin{
+
+    display: block;
+    height: 20px;
+
+}
+
+.two_days_weather{
+
+    position: absolute;
+
+    top: 655px;
+    left: 10vw;
+
+    width: 80vw;
+    height: 300px;
+
+    border-radius: 10px;
+
+    background-color: rgba(28, 67, 119, 0.37);
+
+}
+
+.two_days_weather .two_days_tbl{
+
+    width: 80vw;
+    height: 300px;
+
+    border-collapse: collapse;
+
+}
+
+.two_days_tbl tr td{
+
+    text-align: center;
+    font-weight: 700;
+    font-size: 13px;
+    color: white;
+
+    height: 50px;
+
+}
+
+.two_days_tbl .two_days_reh .tmn{
+    
+    color: rgb(158, 22, 22);
+    text-align: right;
+
+}
+.two_days_tbl .two_days_reh .tmx{
+    
+    color: rgb(22, 94, 158);
+    text-align: left;
+
+}
+
+.two_days_tbl .two_days_date td{ font-size: 20px; }
+.two_days_tbl .two_days_time td{ font-size: 15px; }
+
+.two_days_tbl .day_margin{ height: 10px; }
+
+.two_days_tbl .two_days_tmp .one_sky img{
+
+    width: 100px;
+    height: 100px;
+
+    margin: auto;
+
+}
+
+.two_days_tbl .two_days_tmp .two_sky img{
+
+    width: 100px;
+    height: 100px;
+
+    margin: auto;
+
+}
+
+
+.col_hover{ background-color: rgba(22, 54, 97, 0.37); }
+
+.day_time td{ border-radius: 10px 10px 0 0; }
+.two_days_time td{ border-radius: 10px 10px 0 0; }
+.day_reh td{ border-radius: 0 0 10px 10px; }
+.two_days_reh td{ border-radius: 0 0 10px 10px; }

@@ -1,55 +1,308 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <head>
 
-  <script defer src="{% static 'javascript/home.js' %}"></script>
-  <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-</head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<body>
-  <form method="get" id="selector">
-    <!-- {% csrf_token %} -->
-    <select name="one" onchange="select_change();">
+    <title>Weather</title>
 
-      <option value="{{val.0}}" selected>{{ val.0 }}</option>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
 
-      {% for i in Rc1 %}
-      <option value={{i.one}}> {{ i.one }} </option>
-      {%endfor%}
+    <script defer src="{% static 'javascript/home.js' %}"></script>
+    <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-    </select>
+  </head>
 
-    <select name="two" onchange="select_change();">
+  <body>
 
-      <option value="{{val.1}}" selected>{{ val.1 }}</option>
+    <header>
 
-      {% for i in Rc2 %}
-      <option value={{i.two}}> {{ i.two }} </option>
-      {%endfor%}
+      <div class="title"> Our Town Weather</div>
+      
+      <form method="get" id="selector">
 
-    </select>
+        <!-- {% csrf_token %} -->
 
-    <select name="thr" onchange="select_change();">
+        <select name="one" onchange="select_change();">
 
-      <option value="{{val.2}}" selected>{{ val.2 }}</option>
+          <option value="{{val.0}}" selected>{{ val.0 }}</option>
 
-      {% for i in Rc3 %}
-      <option value={{i.thr}}> {{ i.thr }} </option>
-      {%endfor%}
+          {% for i in Rc1 %}
+          <option value={{i}}> {{ i }} </option>
+          {% endfor %}
 
-    </select>
+        </select>
 
-    <input name = 'prev' style="display: none;" value = "{{ val.0 }}/{{ val.1 }}/{{ val.2 }}"></input>
+        <select name="two" onchange="select_change();">
 
-  </form>
+          <option value="{{val.1}}" selected>{{ val.1 }}</option>
 
-</body>
+          {% for i in Rc2 %}
+          <option value={{i}}> {{ i }} </option>
+          {% endfor %}
+
+        </select>
+
+        <select name="thr" onchange="select_change();">
+
+          <option value="{{val.2}}" selected>{{ val.2 }}</option>
+
+          {% for i in Rc3 %}
+          <option value={{i}}> {{ i }} </option>
+          {% endfor %}
+
+        </select>
+
+        <input name = 'prev' style="display: none;" value = "{{ val.0 }}/{{ val.1 }}/{{ val.2 }}"></input>
+
+      </form>
+
+      
+      <div class="bottom_line"></div>
+
+    </header>
+
+    <div class="main_weather">
+
+      {% for i in sNcst_tbl %}
+      <div class="main_tmp">{{ i.t1h }}℃</div>
+      <div class="main_tmn">▼ {{ today_tmn }}℃</div>
+      <div class="main_tmx">▲ {{ today_tmx }}℃</div>
+      <div class="main_reh">습도 {{ i.reh }}%</div>
+      <div class="main_sky"><img src="{% static 'images/' %}{{ sFcst_tbl.sky.0 }}.png" alt="{{ sFcst_tbl.sky.0 }}" srcset=""></div>
+      <div class="main_wnd">{{ i.vec }} {{ i.wsd }}m/s</div>
+      {% endfor %}
+
+    </div>
+
+    <div class="day_weather">
+
+      <table class="day_tbl">
+
+        <tr class="day_margin"><td colspan="8"></td></tr>
+
+        <tr class="day_time">
+          <td class="day_subtitle" rowspan="2"></td>
+          <td class="day_one col1" onmouseover="col_hover(1)" onmouseout="out_hover(1)">{{ sFcst_tbl.datetime.0.0 }}:{{ sFcst_tbl.datetime.0.1 }}</td>
+          <td class="day_two col2" onmouseover="col_hover(2)" onmouseout="out_hover(2)">{{ sFcst_tbl.datetime.1.0 }}:{{ sFcst_tbl.datetime.1.1 }}</td>
+          <td class="day_thr col3" onmouseover="col_hover(3)" onmouseout="out_hover(3)">{{ sFcst_tbl.datetime.2.0 }}:{{ sFcst_tbl.datetime.2.1 }}</td>
+          <td class="day_fou col4" onmouseover="col_hover(4)" onmouseout="out_hover(4)">{{ sFcst_tbl.datetime.3.0 }}:{{ sFcst_tbl.datetime.3.1 }}</td>
+          <td class="day_fiv col5" onmouseover="col_hover(5)" onmouseout="out_hover(5)">{{ sFcst_tbl.datetime.4.0 }}:{{ sFcst_tbl.datetime.4.1 }}</td>
+          <td class="day_six col6" onmouseover="col_hover(6)" onmouseout="out_hover(6)">{{ sFcst_tbl.datetime.5.0 }}:{{ sFcst_tbl.datetime.5.1 }}</td>
+          <td class="day_padding" rowspan="2"></td>
+        </tr>
+        <tr class="day_sky">
+          <td class="day_one col1" onmouseover="col_hover(1)" onmouseout="out_hover(1)"><img src="{% static 'images/' %}{{ sFcst_tbl.sky.0 }}.png" alt="{{ sFcst_tbl.sky.0 }}" srcset=""></td>
+          <td class="day_two col2" onmouseover="col_hover(2)" onmouseout="out_hover(2)"><img src="{% static 'images/' %}{{ sFcst_tbl.sky.1 }}.png" alt="{{ sFcst_tbl.sky.1 }}" srcset=""></td>
+          <td class="day_thr col3" onmouseover="col_hover(3)" onmouseout="out_hover(3)"><img src="{% static 'images/' %}{{ sFcst_tbl.sky.2 }}.png" alt="{{ sFcst_tbl.sky.2 }}" srcset=""></td>
+          <td class="day_fou col4" onmouseover="col_hover(4)" onmouseout="out_hover(4)"><img src="{% static 'images/' %}{{ sFcst_tbl.sky.3 }}.png" alt="{{ sFcst_tbl.sky.3 }}" srcset=""></td>
+          <td class="day_fiv col5" onmouseover="col_hover(5)" onmouseout="out_hover(5)"><img src="{% static 'images/' %}{{ sFcst_tbl.sky.4 }}.png" alt="{{ sFcst_tbl.sky.4 }}" srcset=""></td>
+          <td class="day_six col6" onmouseover="col_hover(6)" onmouseout="out_hover(6)"><img src="{% static 'images/' %}{{ sFcst_tbl.sky.5 }}.png" alt="{{ sFcst_tbl.sky.5 }}" srcset=""></td>
+        </tr>
+        <tr class="day_t1h">
+          <td class="day_subtitle">기온</td>
+          <td class="day_one col1" onmouseover="col_hover(1)" onmouseout="out_hover(1)">{{ sFcst_tbl.t1h.0 }}℃</td>
+          <td class="day_two col2" onmouseover="col_hover(2)" onmouseout="out_hover(2)">{{ sFcst_tbl.t1h.1 }}℃</td>
+          <td class="day_thr col3" onmouseover="col_hover(3)" onmouseout="out_hover(3)">{{ sFcst_tbl.t1h.2 }}℃</td>
+          <td class="day_fou col4" onmouseover="col_hover(4)" onmouseout="out_hover(4)">{{ sFcst_tbl.t1h.3 }}℃</td>
+          <td class="day_fiv col5" onmouseover="col_hover(5)" onmouseout="out_hover(5)">{{ sFcst_tbl.t1h.4 }}℃</td>
+          <td class="day_six col6" onmouseover="col_hover(6)" onmouseout="out_hover(6)">{{ sFcst_tbl.t1h.5 }}℃</td>
+          <td class="day_padding"></td>
+        </tr>
+        <tr class="day_wnd">
+          <td class="day_subtitle">바람</td>
+          <td class="day_one col1" onmouseover="col_hover(1)" onmouseout="out_hover(1)">{{ sFcst_tbl.vec.0 }} {{ sFcst_tbl.wsd.0 }}m/s</td>
+          <td class="day_two col2" onmouseover="col_hover(2)" onmouseout="out_hover(2)">{{ sFcst_tbl.vec.1 }} {{ sFcst_tbl.wsd.1 }}m/s</td>
+          <td class="day_thr col3" onmouseover="col_hover(3)" onmouseout="out_hover(3)">{{ sFcst_tbl.vec.2 }} {{ sFcst_tbl.wsd.2 }}m/s</td>
+          <td class="day_fou col4" onmouseover="col_hover(4)" onmouseout="out_hover(4)">{{ sFcst_tbl.vec.3 }} {{ sFcst_tbl.wsd.3 }}m/s</td>
+          <td class="day_fiv col5" onmouseover="col_hover(5)" onmouseout="out_hover(5)">{{ sFcst_tbl.vec.4 }} {{ sFcst_tbl.wsd.4 }}m/s</td>
+          <td class="day_six col6" onmouseover="col_hover(6)" onmouseout="out_hover(6)">{{ sFcst_tbl.vec.5 }} {{ sFcst_tbl.wsd.5 }}m/s</td>
+          <td class="day_padding"></td>
+        </tr>
+        <tr class="day_pop">
+          <td class="day_subtitle">강수확률</td>
+          <td class="day_one col1" onmouseover="col_hover(1)" onmouseout="out_hover(1)">{{ vFcst_pop.0 }}%</td>
+          <td class="day_two col2" onmouseover="col_hover(2)" onmouseout="out_hover(2)">{{ vFcst_pop.1 }}%</td>
+          <td class="day_thr col3" onmouseover="col_hover(3)" onmouseout="out_hover(3)">{{ vFcst_pop.2 }}%</td>
+          <td class="day_fou col4" onmouseover="col_hover(4)" onmouseout="out_hover(4)">{{ vFcst_pop.3 }}%</td>
+          <td class="day_fiv col5" onmouseover="col_hover(5)" onmouseout="out_hover(5)">{{ vFcst_pop.4 }}%</td>
+          <td class="day_six col6" onmouseover="col_hover(6)" onmouseout="out_hover(6)">{{ vFcst_pop.5 }}%</td>
+          <td class="day_padding"></td>
+        </tr>
+        <tr class="day_reh">
+          <td class="day_subtitle">습도</td>
+          <td class="day_one col1" onmouseover="col_hover(1)" onmouseout="out_hover(1)">{{ sFcst_tbl.reh.0 }}%</td>
+          <td class="day_two col2" onmouseover="col_hover(2)" onmouseout="out_hover(2)">{{ sFcst_tbl.reh.1 }}%</td>
+          <td class="day_thr col3" onmouseover="col_hover(3)" onmouseout="out_hover(3)">{{ sFcst_tbl.reh.2 }}%</td>
+          <td class="day_fou col4" onmouseover="col_hover(4)" onmouseout="out_hover(4)">{{ sFcst_tbl.reh.3 }}%</td>
+          <td class="day_fiv col5" onmouseover="col_hover(5)" onmouseout="out_hover(5)">{{ sFcst_tbl.reh.4 }}%</td>
+          <td class="day_six col6" onmouseover="col_hover(6)" onmouseout="out_hover(6)">{{ sFcst_tbl.reh.5 }}%</td>
+          <td class="day_padding"></td>
+        </tr>
+
+        <tr class="day_margin"><td colspan="8"></td></tr>
+
+      </table>
+
+    </div>
+
+    <div class="two_days_weather">
+
+      <table class="two_days_tbl">
+
+        <tr class="two_days_date">
+          <td colspan="2"></td>
+          <td class="one" colspan="3">{{ one.date }}</td>
+          <td class="day_padding"></td>
+          <td colspan="2"></td>
+          <td class="two" colspan="3">{{ two.date }}</td>
+          <td class="day_padding"></td>
+        </tr>
+        <tr class="two_days_time">
+          <td colspan="2"></td>
+          <td class="dawn col11" onmouseover="col_hover(11)" onmouseout="out_hover(11)">새벽</td>
+          <td class="day col12" onmouseover="col_hover(12)" onmouseout="out_hover(12)">낮</td>
+          <td class="noon col13" onmouseover="col_hover(13)" onmouseout="out_hover(13)">밤</td>
+          <td class="day_padding"></td>
+          <td colspan="2"></td>
+          <td class="dawn col21" onmouseover="col_hover(21)" onmouseout="out_hover(21)">새벽</td>
+          <td class="day col22" onmouseover="col_hover(22)" onmouseout="out_hover(22)">낮</td>
+          <td class="noon col23" onmouseover="col_hover(23)" onmouseout="out_hover(23)">밤</td>
+          <td class="day_padding"></td>
+        </tr>
+        <tr class="two_days_tmp">
+          <td class="one_sky" colspan="2" rowspan="2"><img src="{% static 'images/' %}{{ one.one_sky }}.png" alt="{{ one.one_sky }}" srcset=""></td>
+          <td class="dawn_tmp col11" onmouseover="col_hover(11)" onmouseout="out_hover(11)">평균 {{ one.one_tmp_lst.0 }}℃</td>
+          <td class="day_tmp col12" onmouseover="col_hover(12)" onmouseout="out_hover(12)">평균 {{ one.one_tmp_lst.1 }}℃</td>
+          <td class="noon_tmp col13" onmouseover="col_hover(13)" onmouseout="out_hover(13)">평균 {{ one.one_tmp_lst.2 }}℃</td>
+          <td class="day_padding"></td>
+          <td class="two_sky" colspan="2" rowspan="2"><img src="{% static 'images/' %}{{ two.two_sky }}.png" alt="{{ one.one_sky }}" srcset=""></td>
+          <td class="dawn_tmp col21" onmouseover="col_hover(21)" onmouseout="out_hover(21)">평균 {{ two.two_tmp_lst.0 }}℃</td>
+          <td class="day_tmp col22" onmouseover="col_hover(22)" onmouseout="out_hover(22)">평균 {{ two.two_tmp_lst.1 }}℃</td>
+          <td class="noon_tmp col23" onmouseover="col_hover(23)" onmouseout="out_hover(23)">평균 {{ two.two_tmp_lst.2 }}℃</td>
+          <td class="day_padding"></td>
+        </tr>
+        <tr class="two_days_pop">
+          <td class="dawn_pop col11" onmouseover="col_hover(11)" onmouseout="out_hover(11)">강수확률 {{ one.one_pop_lst.0 }}%</td>
+          <td class="day_pop col12" onmouseover="col_hover(12)" onmouseout="out_hover(12)">강수확률 {{ one.one_pop_lst.1 }}%</td>
+          <td class="noon_pop col13" onmouseover="col_hover(13)" onmouseout="out_hover(13)">강수확률 {{ one.one_pop_lst.2 }}%</td>
+          <td class="day_padding"></td>
+          <td class="dawn_pop col21" onmouseover="col_hover(21)" onmouseout="out_hover(21)">강수확률 {{ two.two_pop_lst.0 }}%</td>
+          <td class="day_pop col22" onmouseover="col_hover(22)" onmouseout="out_hover(22)">강수확률 {{ two.two_pop_lst.1 }}%</td>
+          <td class="noon_pop col23" onmouseover="col_hover(23)" onmouseout="out_hover(23)">강수확률 {{ two.two_pop_lst.2 }}%</td>
+          <td class="day_padding"></td>
+        </tr>
+        <tr class="two_days_reh">
+          <td class="tmn">▼ {{ one.one_tmn }}℃</td>
+          <td class="tmx">▲ {{ one.one_tmx }}℃</td>
+          <td class="dawn_reh col11" onmouseover="col_hover(11)" onmouseout="out_hover(11)">습도 {{ one.one_reh_lst.0 }}%</td>
+          <td class="day_reh col12" onmouseover="col_hover(12)" onmouseout="out_hover(12)">습도 {{ one.one_reh_lst.1 }}%</td>
+          <td class="noon_reh col13" onmouseover="col_hover(13)" onmouseout="out_hover(13)">습도 {{ one.one_reh_lst.2 }}%</td>
+          <td class="day_padding"></td>
+          <td class="tmn">▼ {{ two.two_tmn }}℃</td>
+          <td class="tmx">▲ {{ two.two_tmx }}℃</td>
+          <td class="dawn_reh col21" onmouseover="col_hover(21)" onmouseout="out_hover(21)">습도 {{ two.two_reh_lst.0 }}%</td>
+          <td class="day_reh col22" onmouseover="col_hover(22)" onmouseout="out_hover(22)">습도 {{ two.two_reh_lst.1 }}%</td>
+          <td class="noon_reh col23" onmouseover="col_hover(23)" onmouseout="out_hover(23)">습도 {{ two.two_reh_lst.2 }}%</td>
+          <td class="day_padding"></td>
+        </tr>
+
+        <tr class="day_margin">
+          <td colspan="10"></td>
+        </tr>
+
+      </table>
+
+    </div>
+
+  </body>
+
+  <script>
+
+    function col_hover(col_num){
+
+    colEl = ''
+
+    if (col_num == 1){
+        colEl = document.querySelectorAll('.col1')
+    }else if (col_num == 2){
+        colEl = document.querySelectorAll('.col2')
+    }else if (col_num == 3){
+        colEl = document.querySelectorAll('.col3')
+    }else if (col_num == 4){
+        colEl = document.querySelectorAll('.col4')
+    }else if (col_num == 5){
+        colEl = document.querySelectorAll('.col5')
+    }else if (col_num == 6){
+        colEl = document.querySelectorAll('.col6')
+    }else if (col_num == 11){
+        colEl = document.querySelectorAll('.col11')
+    }else if (col_num == 12){
+        colEl = document.querySelectorAll('.col12')
+    }else if (col_num == 13){
+        colEl = document.querySelectorAll('.col13')
+    }else if (col_num == 21){
+        colEl = document.querySelectorAll('.col21')
+    }else if (col_num == 22){
+        colEl = document.querySelectorAll('.col22')
+    }else if (col_num == 23){
+        colEl = document.querySelectorAll('.col23')
+    }
+
+    for (var el in colEl){
+        
+        console.log(col_num)
+        console.log(colEl[el])
+        colEl[el].classList.add('col_hover')
+
+    }
+
+    }
+
+    function out_hover(col_num){
+
+    colEl = ''
+
+    if (col_num == 1){
+        colEl = document.querySelectorAll('.col1')
+    }else if (col_num == 2){
+        colEl = document.querySelectorAll('.col2')
+    }else if (col_num == 3){
+        colEl = document.querySelectorAll('.col3')
+    }else if (col_num == 4){
+        colEl = document.querySelectorAll('.col4')
+    }else if (col_num == 5){
+        colEl = document.querySelectorAll('.col5')
+    }else if (col_num == 6){
+        colEl = document.querySelectorAll('.col6')
+    }else if (col_num == 11){
+        colEl = document.querySelectorAll('.col11')
+    }else if (col_num == 12){
+        colEl = document.querySelectorAll('.col12')
+    }else if (col_num == 13){
+        colEl = document.querySelectorAll('.col13')
+    }else if (col_num == 21){
+        colEl = document.querySelectorAll('.col21')
+    }else if (col_num == 22){
+        colEl = document.querySelectorAll('.col22')
+    }else if (col_num == 23){
+        colEl = document.querySelectorAll('.col23')
+    }
+
+    for (var el in colEl){
+        
+        console.log(col_num)
+        console.log(colEl[el])
+        colEl[el].classList.remove('col_hover')
+
+    }
+
+    }
+  </script>
 
 </html>

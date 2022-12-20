@@ -17,28 +17,26 @@ def get_now():                      # 현재 시간을 필요한 포맷으로 �
     hour = time.strftime("%H")
     minute = time.strftime("%M")
 
-    gf_lst = [2, 5, 8, 11, 14, 17, 20, 23]
-
     sf_hour = hour
     sn_hour = hour
-    gf_hour = hour
-    gf_idx = 0
+
+    if int(minute) <= 20: sn_hour = f"{int(sn_hour) - 1:02d}"
+
+    if int(minute) <= 55: sf_hour = f"{int(sf_hour) - 1:02d}"
+
+    return date, sn_hour, sf_hour
+
+def get_tomm():
+
+    now = dt.now()
+
+    tomm1 = now + timedelta(days=1) 
+    tomm2 = now + timedelta(days=2)
     
-    for i in range(len(gf_lst)):
+    tomm1 = tomm1.strftime("%Y년 %m월 %d일")
+    tomm2 = tomm2.strftime("%Y년 %m월 %d일")
 
-        if int(gf_hour) >= gf_lst[i] : gf_idx = i
-        elif int(gf_hour) == 00 : gf_idx = len(gf_lst) - 1
-
-    if int(minute) <= 10:
-        
-        sn_hour = f"{int(sn_hour) - 1:02d}"
-        gf_idx -= 1
-
-    if int(minute) <= 45: sf_hour = f"{int(sf_hour) - 1:02d}"
-
-    gf_hour = f"{gf_lst[gf_idx]:02d}"
-
-    return date, gf_hour, sn_hour, sf_hour
+    return tomm1, tomm2 
 
     # gf_hour = 단기예보는 예보시간이 정해져있고 그 시간 + 10 분에 업데이트 되기에 업데이트 되기전이라면 전시간을 반환
     # sn_hour = 초단기 실황은 예보시간이 정각이고 + 10 분에 업데이트 되기에 업데이트 되기전이라면 시간을 -1 하여 반환
@@ -48,7 +46,7 @@ def get_now():                      # 현재 시간을 필요한 포맷으로 �
 
 def get_data(cst, ad_thr):                         # api에서 데이터 가져오기
 
-    date, gf_time, sn_time, sf_time = get_now()
+    date, sn_time, sf_time = get_now()
 
     api_key = "%2FsB%2B4nyywlmejmA0rBxb02w%2BxrxK3P17tIQb5iDWiPsMOB1Hzpm%2BvNDN%2BYg2pBtldu9aDkNHZ9N9KKGGgf6BCw%3D%3D"
 
@@ -64,7 +62,7 @@ def get_data(cst, ad_thr):                         # api에서 데이터 가져�
 
         x, y = ad_to_xy(ad_thr)
 
-    if cst == "vFcst": url = f"https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?serviceKey={api_key}&pageNo=1&numOfRows=1000&dataType=XML&base_date={date}&base_time={gf_time + '00'}&nx={x}&ny={y}"
+    if cst == "vFcst": url = f"https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?serviceKey={api_key}&pageNo=1&numOfRows=1000&dataType=XML&base_date={date}&base_time=0500&nx={x}&ny={y}"
     elif cst == "sFcst": url = f"https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst?serviceKey={api_key}&pageNo=1&numOfRows=1000&dataType=XML&base_date={date}&base_time={sf_time + '30'}&nx={x}&ny={y}"
     elif cst == "sNcst": url = f"https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst?serviceKey={api_key}&pageNo=1&numOfRows=1000&dataType=XML&base_date={date}&base_time={sn_time + '00'}&nx={x}&ny={y}"
 
@@ -131,6 +129,30 @@ def data_to_DB(lst, cst):                           # 리스트 형식으로 들
     for i in lst:                                   # 다시 리스트에서 하나씩 가져오면서 해당 날짜/시간 데이터 행의 항목 값 넣기
 
         query = f'UPDATE {cst} SET {i[2][0]} = "{i[2][1]}" WHERE Datetime = "{i[0]} {i[1]}"'
+        
+        if i[2][0].upper() == "VEC":
+
+            vec_lst = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW', 'N']
+            vec = int((float(i[2][1]) + 22.5 * 0.5) / 22.5)
+
+            idx = vec_lst[vec]
+            query = f'UPDATE {cst} SET {i[2][0]} = "{idx}" WHERE Datetime = "{i[0]} {i[1]}"'
+
+        if i[2][0].upper() == 'SKY':
+
+            sky_lst = ['sunny', 'sunny', 'cloudy', 'cloudy', 'cloud']
+            sky = int(i[2][1])
+            
+            idx = sky_lst[sky]
+            query = f'UPDATE {cst} SET {i[2][0]} = "{idx}" WHERE Datetime = "{i[0]} {i[1]}"'
+
+        if i[2][0].upper() == 'PTY':
+
+            pty_lst = ['-', '비', '비/눈', '눈', '소나기', '빗방울', '빗방울/눈날림', '눈날림']
+            pty = int(i[2][1])
+            
+            idx = pty_lst[pty]
+            query = f'UPDATE {cst} SET {i[2][0]} = "{idx}" WHERE Datetime = "{i[0]} {i[1]}"'
 
         cmd.execute(query)
         cmd.fetchall()
